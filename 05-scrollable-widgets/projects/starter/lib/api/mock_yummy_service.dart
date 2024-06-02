@@ -11,6 +11,8 @@ class ExploreData {
 }
 
 // Mock Yummy service that grabs sample data to mock up a food app request/response
+const int sleepMillisecond = 1000;
+
 class MockYummyService {
   // Batch request that gets both today recipes and friend's feed
   Future<ExploreData> getExploreData() async {
@@ -24,7 +26,7 @@ class MockYummyService {
   // Get sample food categories to display in ui
   Future<List<FoodCategory>> _getCategories() async {
     // Simulate api request wait time
-    await Future.delayed(const Duration(milliseconds: 1000));
+    await Future.delayed(const Duration(milliseconds: sleepMillisecond));
     // Return mock categories
     return categories;
   }
@@ -32,7 +34,7 @@ class MockYummyService {
   // Get the friend posts to display in ui
   Future<List<Post>> _getFriendFeed() async {
     // Simulate api request wait time
-    await Future.delayed(const Duration(milliseconds: 1000));
+    await Future.delayed(const Duration(milliseconds: sleepMillisecond));
     // Return mock posts
     return posts;
   }
@@ -40,7 +42,7 @@ class MockYummyService {
   // Get the restaurants to display in ui
   Future<List<Restaurant>> _getRestaurants() async {
     // Simulate api request wait time
-    await Future.delayed(const Duration(milliseconds: 1000));
+    await Future.delayed(const Duration(milliseconds: sleepMillisecond));
     // Return mock restaurants
     return restaurants;
   }
