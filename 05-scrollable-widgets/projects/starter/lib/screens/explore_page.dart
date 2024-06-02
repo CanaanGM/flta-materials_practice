@@ -11,7 +11,6 @@ class ExplorePage extends StatelessWidget {
   final MockYummyService mockYummyService = MockYummyService();
   @override
   Widget build(BuildContext context) {
-    // TODO: Add listview Future Builder
     return FutureBuilder(
         future: mockYummyService.getExploreData(),
         builder: (context, AsyncSnapshot<ExploreData> snapshot) {
