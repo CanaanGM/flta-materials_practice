@@ -1,21 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
-import '../components/item_details.dart';
 import '../components/restaurant_item.dart';
-import '../models/cart_manager.dart';
-import '../models/order_manager.dart';
-import '../models/restaurant.dart';
+import '../models/models.dart';
 
 class RestaurantPage extends StatefulWidget {
   final Restaurant restaurant;
-  final CartManager cartManager;
-  final OrderManager ordersManager;
 
   const RestaurantPage({
     super.key,
     required this.restaurant,
-    required this.cartManager,
-    required this.ordersManager,
   });
 
   @override
@@ -23,12 +17,9 @@ class RestaurantPage extends StatefulWidget {
 }
 
 class _RestaurantPageState extends State<RestaurantPage> {
+  static const desktopThreshold = 700;
   static const double largeScreenPercentage = 0.9;
   static const double maxWidth = 1000;
-  static const desktopThreshold = 700;
-  // TODO: Define Drawer Max Width
-  // TODO: Define Scaffold Key
-
   double _calculateConstrainedWidth(double screenWidth) {
     return (screenWidth > desktopThreshold
             ? screenWidth * largeScreenPercentage
@@ -37,7 +28,6 @@ class _RestaurantPageState extends State<RestaurantPage> {
   }
 
   int calculateColumnCount(double screenWidth) {
-    const desktopThreshold = 700;
     return screenWidth > desktopThreshold ? 2 : 1;
   }
 
@@ -47,6 +37,12 @@ class _RestaurantPageState extends State<RestaurantPage> {
         _buildSliverAppBar(),
         _buildInfoSection(),
         _buildGridViewSection('Menu'),
+        SliverToBoxAdapter(
+          child: Container(
+            height: 300.0,
+            color: Colors.blue,
+          ),
+        ),
       ],
     );
   }
@@ -58,7 +54,11 @@ class _RestaurantPageState extends State<RestaurantPage> {
       flexibleSpace: FlexibleSpaceBar(
         background: Center(
           child: Padding(
-            padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 64.0),
+            padding: const EdgeInsets.only(
+              left: 16.0,
+              right: 16.0,
+              top: 64,
+            ),
             child: Stack(
               children: [
                 Container(
@@ -126,21 +126,20 @@ class _RestaurantPageState extends State<RestaurantPage> {
     final item = widget.restaurant.items[index];
     return InkWell(
       onTap: () {
-        return _showBottomSheet(item);
+        // bottom sheet
       },
-      child: RestaurantItem(item: item),
+      child: RestaurantItem(
+        item: item,
+      ),
     );
   }
 
   Widget _sectionTitle(String title) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(8),
       child: Text(
         title,
-        style: const TextStyle(
-          fontSize: 24,
-          fontWeight: FontWeight.bold,
-        ),
+        style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
       ),
     );
   }
@@ -165,7 +164,7 @@ class _RestaurantPageState extends State<RestaurantPage> {
     final columns = calculateColumnCount(MediaQuery.of(context).size.width);
     return SliverToBoxAdapter(
       child: Container(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -177,31 +176,12 @@ class _RestaurantPageState extends State<RestaurantPage> {
     );
   }
 
-  void _showBottomSheet(Item item) {
-    showModalBottomSheet<void>(
-        isScrollControlled: true,
-        context: context,
-        constraints: const BoxConstraints(maxWidth: 480),
-        builder: (context) => ItemDetails(
-            item: item,
-            cartManager: widget.cartManager,
-            quantityUpdated: () {
-              setState(() {});
-            }));
-  }
-  // TODO: Create Drawer
-  // TODO: Open Drawer
-  // TODO: Create Floating Action Button
-
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final constrainedWidth = _calculateConstrainedWidth(screenWidth);
 
     return Scaffold(
-      // TODO: Add Scaffold Key
-      // TODO: Apply Drawer
-      // TODO: Apply Floating Action Button
       body: Center(
         child: SizedBox(
           width: constrainedWidth,

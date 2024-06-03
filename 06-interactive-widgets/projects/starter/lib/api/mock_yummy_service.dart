@@ -1,7 +1,6 @@
-
 import '../models/models.dart';
 
-// ExploreData serves as a data container that holds 
+// ExploreData serves as a data container that holds
 //list of restaurants, food categories, and friend posts.
 class ExploreData {
   final List<Restaurant> restaurants;
@@ -41,7 +40,7 @@ class MockYummyService {
   // Get the restaurants to display in ui
   Future<List<Restaurant>> _getRestaurants() async {
     // Simulate api request wait time
-    await Future.delayed(const Duration(milliseconds: 1000));
+    await Future.delayed(const Duration(milliseconds: 100));
     // Return mock restaurants
     return restaurants;
   }
