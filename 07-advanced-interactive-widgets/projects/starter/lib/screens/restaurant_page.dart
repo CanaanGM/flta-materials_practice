@@ -5,6 +5,7 @@ import '../components/restaurant_item.dart';
 import '../models/cart_manager.dart';
 import '../models/order_manager.dart';
 import '../models/restaurant.dart';
+import 'checkout_page.dart';
 
 class RestaurantPage extends StatefulWidget {
   final Restaurant restaurant;
@@ -26,8 +27,8 @@ class _RestaurantPageState extends State<RestaurantPage> {
   static const double largeScreenPercentage = 0.9;
   static const double maxWidth = 1000;
   static const desktopThreshold = 700;
-  // TODO: Define Drawer Max Width
-  // TODO: Define Scaffold Key
+  static const double drawerWidth = 375;
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
   double _calculateConstrainedWidth(double screenWidth) {
     return (screenWidth > desktopThreshold
@@ -55,6 +56,8 @@ class _RestaurantPageState extends State<RestaurantPage> {
     return SliverAppBar(
       pinned: true,
       expandedHeight: 300.0,
+      automaticallyImplyLeading: false, // hides normal drawer
+      actions: [Container()], // this hides the end drawer hamburger menu
       flexibleSpace: FlexibleSpaceBar(
         background: Center(
           child: Padding(
@@ -189,9 +192,38 @@ class _RestaurantPageState extends State<RestaurantPage> {
               setState(() {});
             }));
   }
-  // TODO: Create Drawer
-  // TODO: Open Drawer
-  // TODO: Create Floating Action Button
+
+  Widget _buildEndDrawer() {
+    return SizedBox(
+        width: drawerWidth,
+        child: Drawer(
+          child: CheckoutPage(
+            cartManager: widget.cartManager,
+            didUpdate: () {
+              setState(() {});
+            },
+            onSubmit: (order) {
+              widget.ordersManager.addOrder(order);
+              Navigator.popUntil(context, (route) => route.isFirst);
+            },
+          ),
+        ));
+  }
+
+  void openDrawer() {
+    scaffoldKey.currentState!.openEndDrawer();
+  }
+
+  Widget _buildFloatingActionButton() {
+    return FloatingActionButton.extended(
+      onPressed: openDrawer,
+      tooltip: 'Cart',
+      icon: const Icon(Icons.shopping_cart),
+      label: Text(
+        '${widget.cartManager.items.length} items in cart',
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -199,9 +231,9 @@ class _RestaurantPageState extends State<RestaurantPage> {
     final constrainedWidth = _calculateConstrainedWidth(screenWidth);
 
     return Scaffold(
-      // TODO: Add Scaffold Key
-      // TODO: Apply Drawer
-      // TODO: Apply Floating Action Button
+      key: scaffoldKey,
+      endDrawer: _buildEndDrawer(),
+      floatingActionButton: _buildFloatingActionButton(),
       body: Center(
         child: SizedBox(
           width: constrainedWidth,
