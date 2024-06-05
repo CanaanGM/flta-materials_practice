@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../components/components.dart';
+import '../constants.dart';
 import '../models/models.dart';
 import 'checkout_page.dart';
 
@@ -8,12 +10,11 @@ class RestaurantPage extends StatefulWidget {
   final CartManager cartManager;
   final OrderManager ordersManager;
 
-  const RestaurantPage({
-    super.key,
-    required this.restaurant,
-    required this.cartManager,
-    required this.ordersManager
-  });
+  const RestaurantPage(
+      {super.key,
+      required this.restaurant,
+      required this.cartManager,
+      required this.ordersManager});
 
   @override
   State<RestaurantPage> createState() => _RestaurantPageState();
@@ -157,13 +158,13 @@ class _RestaurantPageState extends State<RestaurantPage> {
       isScrollControlled: true,
       context: context,
       constraints: const BoxConstraints(maxWidth: 480),
-      builder: (context) =>
-        ItemDetails(
-          item: item, 
-          cartManager: widget.cartManager,
-          quantityUpdated: () {
-            setState(() {});
-          },),
+      builder: (context) => ItemDetails(
+        item: item,
+        cartManager: widget.cartManager,
+        quantityUpdated: () {
+          setState(() {});
+        },
+      ),
     );
   }
 
@@ -171,14 +172,15 @@ class _RestaurantPageState extends State<RestaurantPage> {
     return SizedBox(
       width: drawerWidth,
       child: Drawer(
-        child: CheckoutPage(
+          child: CheckoutPage(
         cartManager: widget.cartManager,
         didUpdate: () {
           setState(() {});
         },
         onSubmit: (order) {
           widget.ordersManager.addOrder(order);
-          // TODO: Navigate to Orders Page
+          context.pop();
+          context.go('/${YummyTab.orders.value}');
         },
       )),
     );

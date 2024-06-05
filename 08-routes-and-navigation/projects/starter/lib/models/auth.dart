@@ -8,7 +8,7 @@ class YummyAuth extends ChangeNotifier {
 
   // Stores user state properties on platform specific file system.
   final _appCache = AppCache();
-  
+
   Future<bool> get loggedIn => _appCache.isUserLoggedIn();
 
   /// Signs out the current user.
@@ -23,7 +23,7 @@ class YummyAuth extends ChangeNotifier {
   /// Signs in a user.
   Future<bool> signIn(String username, String password) async {
     await Future<void>.delayed(const Duration(milliseconds: 200));
-
+    print('$username of $password');
     // Sign in. Allow any password.
     _loggedIn = true;
     await _appCache.cacheUser();
