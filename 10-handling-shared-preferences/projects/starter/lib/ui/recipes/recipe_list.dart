@@ -1,10 +1,13 @@
+import 'dart:convert';
 import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../network/service_interface.dart';
+import '../../network/spoonacular_model.dart';
 import '../widgets/common.dart';
 import '../../data/models/models.dart';
 import '../../network/model_response.dart';
@@ -14,8 +17,7 @@ import '../recipe_card.dart';
 import '../recipes/recipe_details.dart';
 import '../theme/colors.dart';
 import '../widgets/custom_dropdown.dart';
-// TODO: Add imports
-
+import '../../providers.dart';
 
 enum ListType { all, bookmarks }
 
@@ -27,7 +29,7 @@ class RecipeList extends ConsumerStatefulWidget {
 }
 
 class _RecipeListState extends ConsumerState<RecipeList> {
-  // TODO Add Search Index Key
+  static const String prefSearchKey = 'previousSearches';
 
   late TextEditingController searchTextController;
   final ScrollController _scrollController = ScrollController();
@@ -61,7 +63,7 @@ class _RecipeListState extends ConsumerState<RecipeList> {
               !loading &&
               !inErrorState) {
             setState(
-                  () {
+              () {
                 loading = true;
                 newDataRequired = true;
                 currentStartPosition = currentEndPosition;
@@ -83,11 +85,19 @@ class _RecipeListState extends ConsumerState<RecipeList> {
   }
 
   void savePreviousSearches() async {
-    // TODO Save Current Index
+    final prefs = ref.read(sharedPrefProvider);
+    prefs.setStringList(prefSearchKey, previousSearches);
   }
 
   void getPreviousSearches() async {
-    // TODO Get Current Index
+    final prefs = ref.read(sharedPrefProvider);
+    if (prefs.containsKey(prefSearchKey)) {
+      final searches = prefs.getStringList(prefSearchKey);
+      if (searches != null)
+        previousSearches = searches;
+      else
+        previousSearches = <String>[];
+    }
   }
 
   @override
@@ -335,20 +345,25 @@ class _RecipeListState extends ConsumerState<RecipeList> {
       return currentResponse!;
     }
     newDataRequired = false;
-    // TODO: Load Recipes
-/*
+    // final jsonString = await rootBundle.loadString('assets/recipes1.json');
+    // final spoonacularResults =
+    //     SpoonacularResults.fromJson(jsonDecode(jsonString));
+    // final recipies = spoonacularResultsToRecipe(spoonacularResults);
+    // final apiQueryResults = QueryResult(
+    //     offset: spoonacularResults.offset,
+    //     number: spoonacularResults.number,
+    //     totalResults: spoonacularResults.totalResults,
+    //     recipes: recipies);
+    // currentResponse = Future.value(Success(apiQueryResults));
+
     final recipeService = ref.watch(serviceProvider);
     currentResponse = recipeService.queryRecipes(
         searchTextController.text.trim(), currentStartPosition, pageCount);
     return currentResponse!;
-*/
-    const apiQueryResults = QueryResult(
-        offset: 0,
-        number: 0,
-        totalResults: 0,
-        recipes: <Recipe>[]);
-    return Success(apiQueryResults);
 
+    // const apiQueryResults =
+    //      QueryResult(offset: 0, number: 0, totalResults: 0, recipes: <Recipe>[]);
+    // return Success(apiQueryResults);
   }
 
   Widget _buildRecipeList(

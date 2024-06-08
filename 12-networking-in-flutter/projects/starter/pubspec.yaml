@@ -37,6 +37,9 @@ dependencies:
       url: https://github.com/google/flutter-desktop-embedding
       path: plugins/menubar
       ref: 12decbe0f592e14e03223f6f2c0c7e0e2dbd70a1
+  http: ^1.2.1
+  chopper: ^8.0.0
+  chopper_generator: ^8.0.0
 
 
 dev_dependencies:
@@ -47,7 +50,7 @@ dev_dependencies:
   json_serializable: ^6.7.1
   freezed: ^2.4.1
 
-  flutter_lints: ^2.0.2
+  flutter_lints: ^4.0.0
 
 flutter:
 

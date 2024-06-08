@@ -7,12 +7,12 @@ import 'package:lumberdash/lumberdash.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'mock_service/mock_service.dart';
+import 'network/spoonacular_service.dart';
 import 'providers.dart';
 import 'ui/main_screen.dart';
 import 'ui/theme/theme.dart';
 import 'utils.dart';
 import 'package:logging/logging.dart' as system_log;
-
 
 Future<void> main() async {
   _setupLogging();
@@ -23,7 +23,8 @@ Future<void> main() async {
     await DesktopWindow.setMinWindowSize(const Size(260, 600));
   }
   final sharedPrefs = await SharedPreferences.getInstance();
-  final service = await MockService.create();
+  final service = SpoonacularService.create();
+
   runApp(ProviderScope(overrides: [
     sharedPrefProvider.overrideWithValue(sharedPrefs),
     serviceProvider.overrideWithValue(service),
@@ -36,7 +37,7 @@ void _setupLogging() {
   ]);
   system_log.Logger.root.level = system_log.Level.ALL;
   system_log.Logger.root.onRecord.listen((rec) {
-      debugPrint('${rec.level.name}: ${rec.time}: ${rec.message}');
+    debugPrint('${rec.level.name}: ${rec.time}: ${rec.message}');
   });
 }
 

@@ -38,14 +38,14 @@ class _RecipeDetailsState extends ConsumerState<RecipeDetails> {
     final response = await ref
         .read(serviceProvider)
         .queryRecipe(widget.recipe.id.toString());
-    final result = response;
+    final result = response.body;
     if (result is Success<Recipe>) {
       final body = result.value;
       recipeDetail = body;
       if (mounted) {
         setState(() {});
       }
-    } else  {
+    } else {
       logMessage('Problems getting Recipe $result');
     }
   }
@@ -83,7 +83,7 @@ class _RecipeDetailsState extends ConsumerState<RecipeDetails> {
   }
 
   void readRecipe(AsyncSnapshot<RecipeDetailsResponse> snapshot) {
-    final result = snapshot.data;
+    final result = snapshot.data?.body;
     if (result is Success<Recipe>) {
       final body = result.value;
       recipeDetail = body;
@@ -127,9 +127,8 @@ class _RecipeDetailsState extends ConsumerState<RecipeDetails> {
 
   Widget titleRow() {
     // TODO: Add Repository
-    final titleRowColor = widget.recipe.bookmarked
-        ? Colors.black
-        : Colors.white;
+    final titleRowColor =
+        widget.recipe.bookmarked ? Colors.black : Colors.white;
     return Container(
       decoration: const BoxDecoration(color: lightGreen),
       child: Padding(
@@ -148,9 +147,7 @@ class _RecipeDetailsState extends ConsumerState<RecipeDetails> {
                 overflow: TextOverflow.ellipsis,
                 maxLines: 1,
                 style: TextStyle(
-                    fontSize: 24,
-                    fontFamily: 'Roboto',
-                    color: titleRowColor),
+                    fontSize: 24, fontFamily: 'Roboto', color: titleRowColor),
               ),
             ),
             IconButton(
@@ -158,16 +155,14 @@ class _RecipeDetailsState extends ConsumerState<RecipeDetails> {
                 widget.recipe.bookmarked
                     ? 'assets/images/icon_bookmarks.svg'
                     : 'assets/images/icon_bookmark.svg',
-                colorFilter: ColorFilter.mode(
-                    titleRowColor,
-                    BlendMode.srcIn),
+                colorFilter: ColorFilter.mode(titleRowColor, BlendMode.srcIn),
               ),
               onPressed: () {
                 if (!widget.recipe.bookmarked) {
                   if (recipeDetail != null) {
                     // TODO: Insert Recipe
                   }
-                // ignore: dead_code
+                  // ignore: dead_code
                 } else {
                   // TODO: Delete Recipe
                 }

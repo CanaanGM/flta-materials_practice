@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'dart:math';
-
+import 'package:http/http.dart' as http;
+import 'package:chopper/chopper.dart';
 import 'package:flutter/services.dart' show rootBundle;
+
 import '../data/models/recipe.dart';
 import '../network/model_response.dart';
 import '../network/query_result.dart';
@@ -61,23 +63,45 @@ class MockService implements ServiceInterface {
     switch (nextRecipe.nextInt(2)) {
       case 0:
         return Future.value(
+          Response(
+            http.Response(
+              'Dummy',
+              200,
+              request: null,
+            ),
             Success<QueryResult>(_currentRecipes1),
+          ),
         );
       case 1:
-        return Future.value(
-            Success<QueryResult>(_currentRecipes2),
-        );
+        return Future.value(Response(
+          http.Response(
+            'Dummy',
+            200,
+            request: null,
+          ),
+          Success<QueryResult>(_currentRecipes2),
+        ));
       default:
-        return Future.value(
-            Success<QueryResult>(_currentRecipes1),
-        );
+        return Future.value(Response(
+          http.Response(
+            'Dummy',
+            200,
+            request: null,
+          ),
+          Success<QueryResult>(_currentRecipes1),
+        ));
     }
   }
 
   @override
   Future<RecipeDetailsResponse> queryRecipe(String id) {
-    return Future.value(
-        Success<Recipe>(recipeDetails),
-    );
+    return Future.value(Response(
+      http.Response(
+        'Dummy',
+        200,
+        request: null,
+      ),
+      Success<Recipe>(recipeDetails),
+    ));
   }
 }
